@@ -6,7 +6,6 @@ from data_watcher import data_watcher
 from casio_watch import to_json, callWriter
 from logger import logger
 
-
 class Connection:
     def __init__(self, device):
         self.handles_map = self.init_handles_map()
@@ -17,10 +16,12 @@ class Connection:
         self, characteristic: BleakGATTCharacteristic, data: bytearray
     ):
         """Simple notification handler which prints the data received."""
+        data_watcher.emit_event("RAW", data)
         json = to_json(data)
-        name = list(dict(json).keys())[0]
-        value = list(dict(json).values())[0]
-        data_watcher.emit_event(name, value)
+        if json:
+            name = list(dict(json).keys())[0]
+            value = list(dict(json).values())[0]
+            data_watcher.emit_event(name, value)
 
     async def connect(self):
         try:

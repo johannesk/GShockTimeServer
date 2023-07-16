@@ -50,6 +50,8 @@ class DataWatcher:
         return self.subjects.get(name)
 
     def emit_event(self, name, event):
+        if name not in self.subjects:
+          return
         subject = self.subjects[name]
         if subject is not None:
             subject.on_next(event)

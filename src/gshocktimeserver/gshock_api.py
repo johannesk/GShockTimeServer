@@ -8,6 +8,7 @@ from utils import (
     to_ascii_string,
     to_int_array,
     to_compact_string,
+    to_hex_string,
     clean_str,
 )
 from result_queue import result_queue, KeyedResult
@@ -693,6 +694,14 @@ class GshockAPI:
 
         self.subscribe("CASIO_APP_INFORMATION", subscribe_casio_app_information)
         return await result
+
+    async def request_raw(self, data):
+        await self.connection.request(
+            to_compact_string(
+                to_hex_string(data)))
+
+    def subscribe_raw(self, on_next) -> None:
+        self.subscribe("RAW", on_next)
 
     def subscribe(self, subject_name, on_next) -> None:
         data_watcher.add_subject(subject_name)
